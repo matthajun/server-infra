@@ -1,0 +1,71 @@
+loki:
+  enabled: true
+  isDefault: true
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: '{}'
+    uid: ''
+  config:
+    storage_config:
+      aws:
+        s3: s3://[S3-ID]:[S3-PASSWORD]@[S3-HOST]/[S3-BUCKET]
+        s3forcepathstyle: true  # S3에 path-style addressing 방식으로 접근한다.
+        insecure: true  # HTTP 사용
+        endpoint: [S3-HOST]
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/cache
+        cache_ttl: 24h
+        shared_store: s3
+    schema_config:
+      configs:
+        - from: 2023-12-01 # date 기준으로 적용되는 스키마
+          store: boltdb-shipper
+          object_store: s3
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h # retention 은 index period 가 24시간인 경우에만 사용할 수 있음
+    compactor:
+      working_directory: /data/retention
+      shared_store: s3
+      compaction_interval: 60m # 1시간 마다 compaction
+      retention_enabled: true # retention 설정
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+    limits_config:
+      retention_period: 744h # retention 기간, 31일로 설정
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+
+prometheusts:
+  enabled: true
+  isDefault: false
+  url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+  datasource:
+    jsonData: '{}'
+
+grafana:
+  enabled: true
+
+fluent-bit:
+  enabled: false
+
+logstash:
+  enabled: false

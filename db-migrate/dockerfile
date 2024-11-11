@@ -1,0 +1,22 @@
+FROM alpine:3.18.4 AS checkout
+
+RUN apk update
+
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
+RUN apk add git \
+    liquibase \
+    aws-cli \
+    jq \
+    ca-certificates \
+    wget
+
+WORKDIR /home
+
+COPY ./migrate.sh ./
+
+RUN chmod +x ./migrate.sh
+
+ENTRYPOINT ["/bin/sh", "/home/migrate.sh"]
+
+STOPSIGNAL SIGINT

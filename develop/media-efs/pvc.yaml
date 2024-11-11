@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-efs-pvc
+  namespace: develop
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: develop-media-efs-sc
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
