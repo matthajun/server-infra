@@ -10,7 +10,7 @@ set_aws_configure_and_get_secretmanager() {
     DATABASE_PASSWORD=$(aws secretsmanager get-secret-value --secret-id $BRANCH-db-migrate | jq --raw-output '.SecretString' | jq -r .DATABASE_PASSWORD)
     GITHUB_PAT=$(aws secretsmanager get-secret-value --secret-id $BRANCH-db-migrate | jq --raw-output '.SecretString' | jq -r .GITHUB_PAT)
 
-    wget -O /environment/.env --header="x-api-key: $X_API_KEY" https://xe2rikyx3b.execute-api.ap-northeast-2.amazonaws.com/gateway-lambda-secrets/get-secret-env\?name\=$SECRET_MANAGER_NAME    
+    wget -O /environment/.env --header="x-api-key: $X_API_KEY" [AWS-LAMBDA-FUNCTION-URL]?name\=$SECRET_MANAGER_NAME
 
     echo "[END]: set_aws_configure_and_get_secret-manager"
 }

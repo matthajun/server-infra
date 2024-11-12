@@ -1,5 +1,4 @@
-# ebs 로 설치함
-
+# ebs 로 설치
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -10,8 +9,6 @@ reclaimPolicy: Retain
 allowVolumeExpansion: true
 parameters:
   csi.storage.k8s.io/fstype: xfs
-# 로오그
-# reclaimPolicy: Retain
 # pv가 삭제되지 않고 클레임이 해제되더라도 계속해서 데이터가 유지되도록 함 (클레임이 해제되면 pv도 삭제됨)
-# Retain은 pv를 삭제하지 않고 보존하고, pv를 다시 사용할 수 있도록 해줌
-# default는 Delete
+# Retain: pv를 삭제하지 않고 보존하고, pv를 다시 사용할 수 있도록 해줌
+# default: Delete
