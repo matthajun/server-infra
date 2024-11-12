@@ -1,0 +1,14 @@
+# ebs 로 설치
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: minio-storage
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  csi.storage.k8s.io/fstype: xfs
+# pv가 삭제되지 않고 클레임이 해제되더라도 계속해서 데이터가 유지되도록 함 (클레임이 해제되면 pv도 삭제됨)
+# Retain: pv를 삭제하지 않고 보존하고, pv를 다시 사용할 수 있도록 해줌
+# default: Delete

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  x_api_key: [X-API-KEY]
+  aws_access_key_id: [AWS-ACCESS-KEY-ID]
+  aws_secret_access_key: [AWS-SECRET-ACCESS-KEY]
+metadata:
+  name: aws-gateway-key
+  namespace: develop
